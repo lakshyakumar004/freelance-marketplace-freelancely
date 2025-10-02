@@ -100,12 +100,6 @@ Fork the repository, create a branch, commit your changes, push to the branch, a
 
 ---
 
-## License
-
-MIT License
-
----
-
 ## Contact
 
 **Lakshya Kumar**  
