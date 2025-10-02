@@ -1,27 +1,29 @@
+// src/components/PrivateRoute.jsx
 import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children, allowedFor }) => {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // Not logged in → go to login
   if (!token || !user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
-  // If allowedFor is defined and doesn't include the user's role
+  // Check allowed roles
   if (allowedFor) {
-    const isAllowed = Array.isArray(allowedFor)
-      ? allowedFor.includes(user.accountType)
-      : user.accountType === allowedFor;
+    const allowedArray = Array.isArray(allowedFor) ? allowedFor : [allowedFor];
+    const isAllowed = allowedArray.includes(user.accountType);
 
     if (!isAllowed) {
-      // Redirect to correct dashboard
-      return user.accountType === "Freelancer"
-        ? <Navigate to="/dashboard" />
-        : <Navigate to="/client-dashboard" />;
+      // Redirect to their dashboard safely
+      const redirectTo =
+        user.accountType === "Freelancer" ? "/dashboard" : "/client-dashboard";
+      return <Navigate to={redirectTo} replace />;
     }
   }
 
+  // User allowed → render children
   return children;
 };
 
